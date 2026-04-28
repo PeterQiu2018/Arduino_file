@@ -3,12 +3,12 @@
 
 #include "SH1106Wire.h"
 #include "OLEDDisplayUi.h"
-#include "weatherIcon.h"
-#include "DHT.h"
+#include "weatherIcon_sheffield.h"
+// #include <DHT.h>
 
 #define DHTPIN 5   //DHT11 DATA 
 #define DHTTYPE DHT11  //select DHT type
-DHT dht(DHTPIN, DHTTYPE);
+// DHT dht(DHTPIN, DHTTYPE);
 
 const int I2C_DISPLAY_ADDRESS = 0x3c;  //I2c地址默认
 long timeSinceLastWUpdate = 0;    //上次更新后的时间
@@ -20,7 +20,7 @@ const int SDA_PIN = 32;  //引脚连接
 const int SDC_PIN = 33;  //
 #endif
 
-const unsigned char* Icon[]={gImage_01,gImage_02,gImage_03,gImage_04,gImage_09,gImage_10,gImage_11,gImage_13,gImage_50};
+const char* Icon[]={gImage_01,gImage_02,gImage_03,gImage_04,gImage_09,gImage_10,gImage_11,gImage_13,gImage_50};
 
 SH1106Wire     display(I2C_DISPLAY_ADDRESS, SDA_PIN, SDC_PIN);   // 1.3寸用这个
 OLEDDisplayUi   ui( &display );
@@ -28,41 +28,41 @@ OLEDDisplayUi   ui( &display );
 
 void Xbm01(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
   display->clear();
-  display->drawXbm(x + 10, y + 10, 64, 64, Icon[0]);
+  display->drawXbm(x , y , 64, 64, Icon[0]);
 }
 
 void Xbm02(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
   display->clear();
-  display->drawXbm(x + 10, y + 10, 64, 64, Icon[1]);
+  display->drawXbm(x , y , 64, 64, Icon[1]);
 }
 
 void Xbm03(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
   display->clear();
-  display->drawXbm(x + 10, y + 10, 64, 64, Icon[2]);
+  display->drawXbm(x , y , 64, 64, Icon[2]);
 }
 void Xbm04(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
   display->clear();
-  display->drawXbm(x + 10, y + 10, 64, 64, Icon[3]);
+  display->drawXbm(x , y , 64, 64, Icon[3]);
 }
 void Xbm09(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
   display->clear();
-  display->drawXbm(x + 10, y + 10, 64, 64, Icon[4]);
+  display->drawXbm(x , y , 64, 64, Icon[4]);
 }
 void Xbm10(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
   display->clear();
-  display->drawXbm(x + 10, y + 10, 64, 64, Icon[5]);
+  display->drawXbm(x , y , 64, 64, Icon[5]);
 }
 void Xbm11(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
   display->clear();
-  display->drawXbm(x + 10, y + 10, 64, 64, Icon[6]);
+  display->drawXbm(x , y , 64, 64, Icon[6]);
 }
 void Xbm13(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
   display->clear();
-  display->drawXbm(x + 10, y + 10, 64, 64, Icon[7]);
+  display->drawXbm(x , y , 64, 64, Icon[7]);
 }
 void Xbm50(OLEDDisplay *display, OLEDDisplayUiState* state, int16_t x, int16_t y) {
   display->clear();
-  display->drawXbm(x + 10, y + 10, 64, 64, Icon[8]);
+  display->drawXbm(x , y , 64, 64, Icon[8]);
 }
 FrameCallback frames[] = { Xbm01,Xbm02,Xbm03,Xbm04,Xbm09,Xbm10,Xbm11,Xbm13,Xbm50 };
 int numberOfFrames = 9;
@@ -71,10 +71,10 @@ void drawHeaderOverlay(OLEDDisplay *display, OLEDDisplayUiState* state) {   //�
   display->setColor(WHITE);
   display->setFont(ArialMT_Plain_10);
   display->setTextAlignment(TEXT_ALIGN_RIGHT);
-  float temperature = dht.readTemperature();
-  float humidity = dht.readHumidity();
-  String Current=String(temperature,0)+"C | "+String(humidity,0)+"%";
-  display->drawString(100, 54, Current);
+  // float temperature = dht.readTemperature();
+  // float humidity = dht.readHumidity();
+  // String Current=String(temperature,0)+"C | "+String(humidity,0)+"%";
+  // display->drawString(100, 54, Current);
   display->drawHorizontalLine(0, 52, 128);
 }
 
@@ -89,7 +89,7 @@ void setup() {
   
   // 屏幕初始化
   display.init();
-  display.flipScreenVertically(); //屏幕翻转
+  // display.flipScreenVertically(); //屏幕翻转
   display.setContrast(255); //屏幕亮度
   delay(1000);
   display.clear();

@@ -2,17 +2,20 @@
 #include <PubSubClient.h>
 #include <WiFiUdp.h>
 #include <NTPClient.h>
+#include <DNSServer.h>
+#include <ESP8266WebServer.h>
+#include <WiFiManager.h>         //https://github.com/tzapu/WiFiManager
 
-#define LED 2
+#define LED 0
 
-char* ssid = "***";  // WIFI账户
-char* password = "***";           // WIFI密码
+// char* ssid = "***";  // WIFI账户
+// char* password = "***";           // WIFI密码
 // WiFi
 
 // MQTT Broker
 const char *mqtt_broker = "broker.emqx.io";
-const char *led_topic = "***";
-const char *led_lastup = "***";
+const char *led_topic = "f2a4a7fe22b14bec/relay";
+const char *led_lastup = "f2a4a7fe22b14bec/relay_lastup";
 const char *mqtt_username = "emqx";
 const char *mqtt_password = "public";
 const int mqtt_port = 1883;
@@ -28,38 +31,42 @@ NTPClient timeClient(ntpUDP, "cn.pool.ntp.org", utcOffsetInSeconds);
 
 void setup() {
     // Set software serial baud to 115200;
-    Serial.begin(115200);
-    delay(1000); // Delay for stability
+  Serial.begin(115200);
+  WiFiManager wifiManager;  //实例化WiFiManager
+  Serial.println("Start");
+  wifiManager.setDebugOutput(false); //关闭Debug
+  //wifiManager.setConnectTimeout(10); //设置超时
 
-    // Connecting to a WiFi network
-    WiFi.begin(ssid, password);
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.println("Connecting to WiFi...");
-    }
-    Serial.println("Connected to the WiFi network");
+  if (!wifiManager.autoConnect("ESP8266")) {  //AP模式
+    Serial.println("连接失败并超时");
+    //重新设置并再试一次，或者让它进入深度睡眠状态
+    delay(1000);
+  }
+  Serial.println("connected...^_^");
+  yield();
+  Serial.println("Connected to the WiFi network");
 
-    // Setting LED pin as output
-    pinMode(LED, OUTPUT);
-    digitalWrite(LED, LOW);  // Turn off the LED initially
+  // Setting LED pin as output
+  pinMode(LED, OUTPUT);
+  digitalWrite(LED, LOW);  // Turn off the LED initially
 
-    timeClient.begin();
+  timeClient.begin();
 
-    // Connecting to an MQTT broker
-    client.setServer(mqtt_broker, mqtt_port);
-    client.setCallback(callback);
-    while (!client.connected()) {
-        String client_id = "esp8266-client-";
-        client_id += String(WiFi.macAddress());
-        Serial.printf("The client %s connects to the public MQTT broker\n", client_id.c_str());
-        if (client.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
-            Serial.println("Public EMQX MQTT broker connected");
-        } else {
-            Serial.print("Failed with state ");
-            Serial.print(client.state());
-            delay(2000);
-        }
-    }
+  // Connecting to an MQTT broker
+  client.setServer(mqtt_broker, mqtt_port);
+  client.setCallback(callback);
+  while (!client.connected()) {
+      String client_id = "esp8266-client-";
+      client_id += String(WiFi.macAddress());
+      Serial.printf("The client %s connects to the public MQTT broker\n", client_id.c_str());
+      if (client.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
+          Serial.println("Public EMQX MQTT broker connected");
+      } else {
+          Serial.print("Failed with state ");
+          Serial.print(client.state());
+          delay(2000);
+      }
+  }
 
     // Publish and subscribe
     client.publish(led_topic, "IoT device shenzhen up");

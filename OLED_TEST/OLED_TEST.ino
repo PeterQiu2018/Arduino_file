@@ -41,28 +41,10 @@ void setup()        //初始化
 
 void loop()
 {
-  test_SSD1306();     //调用测试函数
-}
-
-void test_SSD1306(void)   //测试函数
-{
-  /*------------------------显示英文 数字---------------------*/
-  display.clearDisplay();   // clears the screen and buffer
-  display.setTextSize(1); //选择字号
-  display.setTextColor(WHITE);  //字体颜色
-  display.setCursor(0, 0);  //起点坐标
-  display.println("Hello, Arduino!");
-  display.setTextColor(BLACK, WHITE); // 'inverted' text
-  display.println(3.141592);
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
-  display.print("0x"); display.println(0xDEADBEEF, HEX);
+  for (int i=0;i<2048;i++){
+    int noise = analogRead(A1);
+    display.drawPixel(random(64), random(128), SSD1306_WHITE);
+  }
   display.display();
-  delay(2000);
-  display.drawPixel(0, 0, SSD1306_WHITE);
-
-  // Show the display buffer on the screen. You MUST call display() after
-  // drawing commands to make them visible on screen!
-  display.display();
-  delay(2000);
+  delay(1000);
 }

@@ -4,10 +4,10 @@
 
 #include <time.h>                       
 #include <sys/time.h>                  
-#include <coredecls.h>      
+// #include <coredecls.h>      
 
 
-#include "SH1106Wire.h"   //1.3寸用这个
+#include <SH1106Wire.h>   //1.3寸用这个
 #include "OLEDDisplayUi.h"
 #include "HeFeng.h"
 #include "WeatherStationFonts.h"
@@ -22,12 +22,12 @@ const char* WIFI_PWD = "***";
 
 const char* BILIBILIID = "167480182";  //填写你的B站账号
 
-const char* HEFENG_KEY = "****";//填写你的和风天气秘钥
+const char* HEFENG_KEY = "e338421e6825458c99c68ee846f03511";//填写你的和风天气秘钥
 const char* Lat="53.6398";
 const char* Lon="-1.7798";
 
-#define TZ              0      // 中国时区为8
-#define DST_MN          0      // 默认为0
+#define TZ              8      // 中国时区为8
+#define DST_MN          8      // 默认为0
 
 const int UPDATE_INTERVAL_SECS = 5 * 60; // 5分钟更新一次天气
 const int UPDATE_CURR_INTERVAL_SECS = 2 * 59; // 2分钟更新一次粉丝数

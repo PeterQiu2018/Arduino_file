@@ -3,7 +3,10 @@
 
 // SG90-->400-2500=0-180   MG996R-->400-2500=0-120
 #define SERVO_FREQ 50  // Analog servos run at ~50 Hz updates
-
+int angle1=0;
+int angle2=0;
+int PWM_value1=0;
+int PWM_value2=0;
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40, Wire);
 
 void setup() {
